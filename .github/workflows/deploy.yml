@@ -1,0 +1,40 @@
+name: CI/CD for Node.js App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # שלב 1: קבלת קוד הפרויקט
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # שלב 2: התקנת Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    # שלב 3: התקנת חבילות NPM
+    - name: Install dependencies
+      run: npm install
+
+    # שלב 4: הרצת build
+    - name: Build the app
+      run: npm run build
+
+    # שלב 5: פריסה ל-S3
+    - name: Deploy to S3
+      uses: jakejarvis/s3-sync-action@v0.5.1
+      with:
+        args: --acl public-read --delete
+      env:
+        AWS_S3_BUCKET: tv-shop-colman
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        SOURCE_DIR: build
