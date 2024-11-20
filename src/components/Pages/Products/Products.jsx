@@ -130,12 +130,15 @@ function Products() {
     // ניתן להוסיף עוד מוצרים כאן...
   ];
 
+  // הסרת הפונקציה handleFilterChange כי אינה בשימוש
+  /*
   const handleFilterChange = (field, value) => {
     setFilters((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
+  */
 
   const toggleFilter = (field, value) => {
     setFilters((prev) => {
@@ -187,7 +190,7 @@ function Products() {
         <div className="filter-title">
           <h3>Filters</h3>
         </div>
-  
+
         <div className="filter-section">
           <h4>Category</h4>
           <div className="Category">
@@ -203,7 +206,7 @@ function Products() {
             ))}
           </div>
         </div>
-  
+
         <div className="filter-section">
           <h4>Size</h4>
           <div className="size">
@@ -214,12 +217,12 @@ function Products() {
                   checked={filters.sizes.includes(size)}
                   onChange={() => toggleFilter("sizes", size)}
                 />
-                {size} Inch
+                {typeof size === "number" ? `${size} Inch` : size}
               </label>
             ))}
           </div>
         </div>
-  
+
         <div className="filter-section">
           <h4>Brand</h4>
           <div className="Brand">
@@ -235,7 +238,7 @@ function Products() {
             ))}
           </div>
         </div>
-  
+
         <div className="filter-section">
           <h4>Model</h4>
           <div className="Model">
@@ -251,7 +254,7 @@ function Products() {
             ))}
           </div>
         </div>
-  
+
         <div className="filter-section">
           <h4>Price Range</h4>
           <Slider
@@ -268,13 +271,13 @@ function Products() {
             max={5000}
             step={10}
           />
-          <div className="price-values" style={{display:"flex",justifyContent:"space-around"}}>
+          <div className="price-values" style={{ display: "flex", justifyContent: "space-around" }}>
             <span>Min: ${filters.minPrice}</span>
             <span>Max: ${filters.maxPrice}</span>
           </div>
         </div>
       </div>
-  
+
       <div className="products-list">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
@@ -295,8 +298,6 @@ function Products() {
       </div>
     </div>
   );
-  
-  
 }
 
 export default Products;
