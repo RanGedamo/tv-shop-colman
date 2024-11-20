@@ -89,7 +89,7 @@ function Home() {
                       version of Bootstrap 5 (beta 1). This template is 100%
                       free provided by{" "}
                       <a
-                        rel="sponsored"
+                        rel="sponsored noreferrer"
                         className="text-success"
                         href="https://templatemo.com"
                         target="_blank"
@@ -98,7 +98,7 @@ function Home() {
                       </a>{" "}
                       website. Image credits go to{" "}
                       <a
-                        rel="sponsored"
+                        rel="sponsored noreferrer"
                         className="text-success"
                         href="https://stories.freepik.com/"
                         target="_blank"
@@ -107,7 +107,7 @@ function Home() {
                       </a>
                       ,
                       <a
-                        rel="sponsored"
+                        rel="sponsored noreferrer"
                         className="text-success"
                         href="https://unsplash.com/"
                         target="_blank"
@@ -116,7 +116,7 @@ function Home() {
                       </a>{" "}
                       and
                       <a
-                        rel="sponsored"
+                        rel="sponsored noreferrer"
                         className="text-success"
                         href="https://icons8.com/"
                         target="_blank"

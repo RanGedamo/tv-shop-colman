@@ -188,6 +188,6 @@ function About() {
       </section>
     </div>
   );
-};
+}
 
 export default About;

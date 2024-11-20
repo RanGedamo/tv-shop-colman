@@ -1,5 +1,4 @@
-
-
+import React from 'react';
 import './App.css';
 import { Footer, Header } from './components';
 
@@ -11,7 +10,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Header />
-        <Routing/>
+        <Routing />
         <Footer />
       </BrowserRouter>
     </div>
