@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:300,700");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+img {
+  max-width: 100%;
+}
+.cartPage {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 1060px) {
+    grid-template-columns: minmax(530px, 1fr) minmax(530px, 1.5fr);
+  }
+}
+@media screen and (max-width: 768px) {
+  .cart {
+    padding: 1rem; /* הקטנת הריווח */
+    max-width: 90vw; /* הגבלת רוחב */
+    margin: 0; /* מרכזת את .cart במסכים קטנים */
+    overflow-x: hidden; /* הסרת גלילה אופקית */
+  }
+
+  .cart-item,
+  .shipping,
+  .total {
+    grid-template-columns: minmax(50px, 1fr) 1.5fr 1ch 4ch; /* הקטנת רוחב עמודות */
+    grid-gap: 0.5rem; /* צמצום המרווח בין העמודות */
+  }
+  .checkout {
+    width: 100vw;
+    padding: 0 1rem; /* הוספת ריווח פנימי קטן מימין ושמאל */
+    margin: 0; /* ביטול מרווח חיצוני */
+    box-sizing: border-box;
+  }
+  .checkout header {
+    display: flex;
+    justify-content: center;
+  }
+  .checkout form {
+    margin-left: -50px; /* להזיז את הטופס לשמאל */
+    max-width: 100%; /* למלא את כל הרוחב */
+  }
+}
+
+.cart {
+  padding: 2rem;
+  > .cart-item,
+  > .shipping,
+  > .total {
+    display: grid;
+    grid-template-columns: minmax(80px, 2fr) 4fr 2ch 7ch;
+    grid-gap: 1rem;
+    align-items: center;
+
+    .price {
+      text-align: right;
+    }
+  }
+  .total .title,
+  .shipping .title {
+    grid-column: 2;
+  }
+  .total {
+    border-top: 1px solid #dadada;
+    border-bottom: 1px solid #dadada;
+    .price {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+  }
+}
+.checkout {
+  background: #fff;
+  padding: 2rem;
+  padding-right: 3rem;
+  > header {
+    display: grid;
+
+    > h1,
+    p {
+      margin-top: 0;
+      grid-column: 2;
+    }
+    > h1 {
+      margin-bottom: 0;
+    }
+    > p {
+      margin-bottom: 2rem;
+    }
+  }
+  > form {
+    .input-group {
+      margin-bottom: 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(16ch, 1fr) 4fr;
+      align-items: baseline;
+      .label {
+        padding-right: 1rem;
+        text-align: right;
+      }
+      .input {
+        align-items: baseline;
+        > input {
+          width: 100%;
+          border: 0;
+          font-size: inherit;
+          font-family: inherit;
+          color: inherit;
+          border-bottom: 1px solid #dadada;
+          padding: 0.5rem 0;
+          &:focus {
+            outline: none;
+            border-color: #121212;
+          }
+        }
+        &.number {
+          display: flex;
+          > span {
+            padding: 0 0.5rem;
+          }
+          > input {
+            text-align: center;
+            min-width: 4ch;
+          }
+        }
+      }
+      > button {
+        grid-column: 2;
+        background: #121212;
+        color: #fff;
+        padding: 1rem;
+        border: 0;
+        cursor: pointer;
+        margin-top: 2rem;
+
+      }
+    }
+  }
+}
