@@ -3,10 +3,10 @@ import React, { useContext } from "react";
 import { CartContext } from "../../../Services/CartContext";
 
 function Cart() {
-  const { cart, removeFromCart, setCart } = useContext(CartContext);
+  const { cart, removeFromCart, clearCart } = useContext(CartContext);
 
   // חישוב הסכום הכולל של המוצרים
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
     // איסוף כל הערכים מהטופס
@@ -46,8 +46,7 @@ function Cart() {
     localStorage.setItem("order", JSON.stringify(order));
 
     // ניקוי העגלה לאחר הרכישה
-    setCart([]);
-    localStorage.removeItem("cart");
+    clearCart();
 
     // העברה לדף הבית
     window.location.href = "/";
@@ -66,7 +65,7 @@ function Cart() {
                 <img src={item.image} alt={item.name} className="image" />
                 <div className="details">
                   <p className="title">{item.name}</p>
-                  <p className="price">${item.price.toFixed(2)}</p>
+                  <p className="price">${item.price.toFixed(2)} x {item.quantity}</p>
                 </div>
                 <button
                   className="remove-item-btn"

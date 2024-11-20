@@ -1,23 +1,21 @@
 import "./Header.css";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { CartContext } from "../../../Services/CartContext";
 
 function Header() {
   const { cart, removeFromCart } = useContext(CartContext); // גישה לעגלה והסרת פריטים
   const [isCartOpen, setIsCartOpen] = useState(false); // שליטה על פתיחת ה-dropdown
-  const [cartItems, setCartItems] = useState(cart); // שמירה על רשימת המוצרים הדרופדאון
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // שליטה על פתיחת ה-dropdown של היוזר
 
-  // עדכון ה-cartItems בכל פעם שה-cart משתנה
-  useEffect(() => {
-    setCartItems(cart);
-  }, [cart]);
-
   // חישוב הסכום הכולל
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  // חישוב כמות הפריטים הכוללת
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="header">
+      {/* ניווט עליון */}
       <nav
         className="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block"
         id="templatemo_nav_top"
@@ -45,7 +43,7 @@ function Header() {
                 className="text-light"
                 href="https://fb.com/templatemo"
                 target="_blank"
-                rel="sponsored"
+                rel="noopener noreferrer"
               >
                 <i className="fab fa-facebook-f fa-sm fa-fw me-2"></i>
               </a>
@@ -53,6 +51,7 @@ function Header() {
                 className="text-light"
                 href="https://www.instagram.com/"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="fab fa-instagram fa-sm fa-fw me-2"></i>
               </a>
@@ -60,6 +59,7 @@ function Header() {
                 className="text-light"
                 href="https://twitter.com/"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="fab fa-twitter fa-sm fa-fw me-2"></i>
               </a>
@@ -67,6 +67,7 @@ function Header() {
                 className="text-light"
                 href="https://www.linkedin.com/"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <i className="fab fa-linkedin fa-sm fa-fw"></i>
               </a>
@@ -75,6 +76,7 @@ function Header() {
         </div>
       </nav>
 
+      {/* ניווט ראשי */}
       <nav className="navbar navbar-expand-lg navbar-light shadow">
         <div className="container d-flex justify-content-between align-items-center">
           <a
@@ -89,7 +91,7 @@ function Header() {
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#templatemo_main_nav"
-            aria-controls="navbarSupportedContent"
+            aria-controls="templatemo_main_nav"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
@@ -108,42 +110,40 @@ function Header() {
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="About">
+                  <a className="nav-link" href="/About">
                     About
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="Products">
+                  <a className="nav-link" href="/Products">
                     Products
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="ContactUs">
+                  <a className="nav-link" href="/ContactUs">
                     ContactUs
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="Dashboard">
+                  <a className="nav-link" href="/Dashboard">
                     Dashboard
                   </a>
                 </li>
               </ul>
             </div>
             <div className="navbar align-self-center d-flex">
+              {/* אייקון העגלה */}
               <div className="cart-icon position-relative">
-                <a
-                  className="nav-icon position-relative text-decoration-none"
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsCartOpen(!isCartOpen);
-                  }}
+                <button
+                  className="nav-icon position-relative text-decoration-none btn btn-link"
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  aria-label="Toggle Cart"
                 >
                   <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                   <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">
-                    {cart.length}
+                    {totalItems}
                   </span>
-                </a>
+                </button>
                 {isCartOpen && (
                   <div className="cart-dropdown">
                     <ul className="cart-items">
@@ -156,7 +156,7 @@ function Header() {
                           />
                           <div className="cart-item-details">
                             <p>{item.name}</p>
-                            <p>${item.price}</p>
+                            <p>${item.price} x {item.quantity}</p>
                           </div>
                           <button
                             className="remove-item-btn"
@@ -180,17 +180,16 @@ function Header() {
                   </div>
                 )}
               </div>
+
+              {/* אייקון היוזר */}
               <div className="user-icon position-relative">
-                <a
-                  className="nav-icon position-relative text-decoration-none"
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsUserDropdownOpen(!isUserDropdownOpen);
-                  }}
+                <button
+                  className="nav-icon position-relative text-decoration-none btn btn-link"
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  aria-label="Toggle User Menu"
                 >
                   <i className="fa fa-fw fa-user text-dark mr-3"></i>
-                </a>
+                </button>
                 {isUserDropdownOpen && (
                   <div className="user-dropdown">
                     <ul className="user-options">
