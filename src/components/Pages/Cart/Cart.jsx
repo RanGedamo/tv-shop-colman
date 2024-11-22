@@ -1,6 +1,6 @@
 import "./Cart.css";
 import React, { useContext } from "react";
-import { CartContext } from "../../../Services/CartContext";
+import { CartContext } from "../../../Contexts/CartContext";
 
 function Cart() {
   const { cart, removeFromCart, clearCart } = useContext(CartContext);
@@ -46,6 +46,7 @@ function Cart() {
     localStorage.setItem("order", JSON.stringify(order));
 
     // ניקוי העגלה לאחר הרכישה
+    console.log("Clearing cart after checkout...");
     clearCart();
 
     // העברה לדף הבית
@@ -69,7 +70,10 @@ function Cart() {
                 </div>
                 <button
                   className="remove-item-btn"
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => {
+                    console.log(`Removing item with id: ${item.id}`);
+                    removeFromCart(item.id);
+                  }}
                 >
                   Remove
                 </button>

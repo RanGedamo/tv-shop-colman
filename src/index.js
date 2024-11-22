@@ -5,14 +5,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { CartProvider } from "./Services/CartContext"; // נתיב יחסי לתיקיה
+// import { CartProvider } from "./Contexts/CartContext"; // נתיב יחסי לתיקיה
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <CartProvider>
+
+    {/* <CartProvider> */}
       <App />
-    </CartProvider>
+    {/* </CartProvider> */}
+
   </React.StrictMode>
 );
 

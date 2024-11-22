@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { CartContext } from "../../../Services/CartContext";
+import { CartContext } from "../../../Contexts/CartContext";
 import "./Products.css";
 
 import Slider from '@mui/material/Slider';

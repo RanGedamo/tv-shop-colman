@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 // src/setupTests.js
 
 import { render } from '@testing-library/react';
-import { CartProvider } from './Services/CartContext';
+import { CartProvider } from './Contexts/CartContext';
 
 const customRender = (ui, options) =>
   render(ui, { wrapper: CartProvider, ...options });
