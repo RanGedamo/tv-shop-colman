@@ -1,13 +1,16 @@
 // src/Routing.jsx
 import React from 'react';
 import { Route, Routes, Navigate } from "react-router-dom";
-import { About, Cart, ContactUs, Dashboard, Home, PageNotFound, Products } from "./components";
+import { About, Cart, ContactUs, Dashboard, Home, Orders, PageNotFound, Products,Profile } from "./components";
 import Login from './components/Pages/Login/Login';
 import Register from './components/Pages/Register/Register';
 import { useAuth } from './Contexts/AuthContext';
+import PopUpCheck from './components/Pages/PopUpCheck/PopUpCheck';
+
 
 function Routing() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+
 
   return (
     <div className="main">
@@ -18,24 +21,44 @@ function Routing() {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/Products" element={<Products />} />
 
         {/* Protected Routes */}
         <Route 
-          path="/products" 
-          element={user ? <Products /> : <Navigate to="/login" replace />} 
+          path="/Orders" 
+          element={isAuthenticated ? <Orders /> : <PopUpCheck />} 
         />
+<Route 
+  path="/Cart" 
+  element={
+    isAuthenticated ? (
+      <Cart />
+    ) : (
+      <PopUpCheck />
+    )
+  }
+/>
         <Route 
-          path="/Cart" 
-          element={user ? <Cart /> : <Navigate to="/login" replace />} 
+          path="/Profile" 
+          element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} 
         />
 
-        {/* Admin Only */}
+        {/* Admin Route */}
         <Route 
           path="/Dashboard" 
-          element={isAdmin ? <Dashboard /> : <Navigate to="/" replace />} 
+          element={
+            isAuthenticated ? (
+              user?.isAdmin ? (
+                <Dashboard />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
         />
 
-        {/* 404 */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

@@ -4,10 +4,12 @@ import { Footer, Header } from './components/index';
 import { BrowserRouter } from 'react-router-dom';
 import Routing from './Routing';
 import { AuthProvider } from './Contexts/AuthContext';
+import { CartProvider } from './Contexts/CartContext';
 
 function App() {
   return (
     <AuthProvider>
+         <CartProvider>
       <div className="App">
         <BrowserRouter>
           <Header />
@@ -15,6 +17,7 @@ function App() {
           <Footer />
         </BrowserRouter>
       </div>
+        </CartProvider>
     </AuthProvider>
   );
 }

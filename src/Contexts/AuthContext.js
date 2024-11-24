@@ -1,4 +1,3 @@
-
 // src/contexts/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
@@ -6,53 +5,61 @@ import PropTypes from 'prop-types';
 
 const AuthContext = createContext(null);
 
+
+
+
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // בדיקת משתמש מחובר בטעינה ראשונית
-  useEffect(() => {
-    const checkAuth = async () => {
+  const checkAuthStatus = async () => {
+    try {
+      // קודם מנסים להשתמש ב-access token הקיים
       try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        localStorage.removeItem('token');
-      } finally {
+        const response = await authService.getCurrentUser();
+        setUser(response.user);
         setLoading(false);
+        return;
+      } catch (accessError) {
+        // אם יש שגיאת 401, ממשיכים לבדיקת refresh
+        if (accessError.response?.status !== 401) {
+          throw accessError;
+        }
       }
-    };
 
-    checkAuth();
-  }, []);
-
-  const register = async (userData) => {
-    const response = await authService.register(userData);
-    if (response.accessToken) {
-      localStorage.setItem('token', response.accessToken);
-      setUser(response.user);
+      // אם הגענו לכאן, ננסה לרענן את הטוקן
+      const hasRefreshToken = document.cookie.includes('refreshToken');
+      if (hasRefreshToken) {
+        const refreshResponse = await authService.refresh();
+        setUser(refreshResponse.user);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
-    return response;
   };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const login = async (email, password) => {
     const response = await authService.login(email, password);
-    if (response.accessToken) {
-      localStorage.setItem('token', response.accessToken);
-      setUser(response.user);
-    }
+    setUser(response.user);
     return response;
   };
 
   const logout = async () => {
     try {
       await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
     } finally {
-      localStorage.removeItem('token');
       setUser(null);
     }
   };
@@ -60,20 +67,15 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    register,
     login,
     logout,
     isAuthenticated: !!user,
     isAdmin: user?.isAdmin || false
   };
 
-  if (loading) {
-    return <div>טוען...</div>;
-  }
-
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
@@ -85,7 +87,6 @@ export const useAuth = () => {
   }
   return context;
 };
-
 // שימוש בטוח בערכי הקונטקסט
 export const useAuthStatus = () => {
   const { loading, isAuthenticated, isAdmin } = useAuth();
@@ -93,10 +94,12 @@ export const useAuthStatus = () => {
 };
 
 export const useAuthActions = () => {
-  const { login, register, logout, updateUser } = useAuth();
-  return { login, register, logout, updateUser };
+  const { login, logout } = useAuth();
+  return { login, logout };
 };
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
+
+export default AuthProvider;
