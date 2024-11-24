@@ -7,7 +7,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -17,28 +17,29 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // מנקה את השגיאה כשהמשתמש מתחיל להקליד
-    setError('');
+    setErrors([]); // ניקוי שגיאות בעת הקלדה
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // מונע ריפרש של הדף
+    e.preventDefault();
     setLoading(true);
-    setError('');
+    setErrors([]);
     
     try {
       await register(formData);
       navigate('/');
     } catch (err) {
-      const safa = err;
-      // const {field} = errors;
-      console.log(safa);
-      
+      console.error('Registration error:', err);
       
       if (err.response?.data?.errors) {
-        setError(err.response?.data?.errors);
+        // אם יש מערך שגיאות מהשרת
+        setErrors(err.response.data.errors.map(error => error.message));
+      } else if (err.response?.data?.message) {
+        // אם יש הודעת שגיאה בודדת מהשרת
+        setErrors([err.response.data.message]);
       } else {
-        setError(err.message || 'אירעה שגיאה בהרשמה');
+        // שגיאה כללית
+        setErrors(['אירעה שגיאה בהרשמה']);
       }
     } finally {
       setLoading(false);
@@ -50,10 +51,12 @@ const Register = () => {
       <h2 className="text-2xl font-bold mb-4">הרשמה</h2>
 
       {/* הצגת שגיאות */}
-      {error && (
+      {errors.length > 0 && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error.split('\n').map((line, i) => (
-            <p key={i}>{line}</p>
+          {errors.map((error, index) => (
+            <p key={index} className="mb-1">
+              {error}
+            </p>
           ))}
         </div>
       )}

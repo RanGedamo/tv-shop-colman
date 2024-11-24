@@ -22,12 +22,13 @@ function Routing() {
         <Route path="/login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Products" element={<Products />} />
+        <Route path="/Orders" element={<Orders />} />
 
         {/* Protected Routes */}
-        <Route 
+        {/* <Route 
           path="/Orders" 
           element={isAuthenticated ? <Orders /> : <PopUpCheck />} 
-        />
+        /> */}
 <Route 
   path="/Cart" 
   element={

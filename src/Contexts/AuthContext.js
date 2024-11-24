@@ -1,13 +1,8 @@
-// src/contexts/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 import PropTypes from 'prop-types';
 
 const AuthContext = createContext(null);
-
-
-
-
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -15,20 +10,20 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      // קודם מנסים להשתמש ב-access token הקיים
+      // First try using existing access token
       try {
         const response = await authService.getCurrentUser();
         setUser(response.user);
         setLoading(false);
         return;
       } catch (accessError) {
-        // אם יש שגיאת 401, ממשיכים לבדיקת refresh
+        // If 401 error, proceed to refresh check
         if (accessError.response?.status !== 401) {
           throw accessError;
         }
       }
 
-      // אם הגענו לכאן, ננסה לרענן את הטוקן
+      // Try refreshing token if available
       const hasRefreshToken = document.cookie.includes('refreshToken');
       if (hasRefreshToken) {
         const refreshResponse = await authService.refresh();
@@ -48,10 +43,26 @@ export const AuthProvider = ({ children }) => {
     checkAuthStatus();
   }, []);
 
+  const register = async (userData) => {
+    try {
+      const response = await authService.register(userData);
+      setUser(response.user);
+      return response;
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error; // Re-throw to handle in the component
+    }
+  };
+
   const login = async (email, password) => {
-    const response = await authService.login(email, password);
-    setUser(response.user);
-    return response;
+    try {
+      const response = await authService.login(email, password);
+      setUser(response.user);
+      return response;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error; // Re-throw to handle in the component
+    }
   };
 
   const logout = async () => {
@@ -67,6 +78,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    register,
     login,
     logout,
     isAuthenticated: !!user,
@@ -87,15 +99,16 @@ export const useAuth = () => {
   }
   return context;
 };
-// שימוש בטוח בערכי הקונטקסט
+
+// Safe context value usage
 export const useAuthStatus = () => {
   const { loading, isAuthenticated, isAdmin } = useAuth();
   return { loading, isAuthenticated, isAdmin };
 };
 
 export const useAuthActions = () => {
-  const { login, logout } = useAuth();
-  return { login, logout };
+  const { login, logout, register } = useAuth();
+  return { login, logout, register };
 };
 
 AuthProvider.propTypes = {

@@ -1,6 +1,7 @@
-import React from 'react';
+// OrdersPage.jsx
+import React, { useState } from 'react';
 import { Package, Truck, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import './Orders.css';  // Import the CSS file
 
 const Orders = () => {
   const [expandedOrders, setExpandedOrders] = useState({});
@@ -11,7 +12,7 @@ const Orders = () => {
       [orderId]: !prev[orderId]
     }));
   };
-
+  
   const orders = [
     {
       id: '#OR-28947',
@@ -49,7 +50,7 @@ const Orders = () => {
       total: 84.96
     }
   ];
-
+  
   const getStatusIcon = (status) => {
     switch (status) {
       case 'Shipped':
@@ -62,63 +63,57 @@ const Orders = () => {
         return null;
     }
   };
-
-  const getStatusStyle = (status) => {
-    switch (status) {
-      case 'Shipped':
-        return 'bg-blue-100 text-blue-800';
-      case 'Processing':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Delivered':
-        return 'bg-green-100 text-green-800';
-      default:
-        return '';
-    }
-  };
+  
+  // const getStatusStyle = (status) => {
+  //   switch (status) {
+  //     case 'Shipped':
+  //       return 'bg-blue-100 text-blue-800';
+  //     case 'Processing':
+  //       return 'bg-yellow-100 text-yellow-800';
+  //     case 'Delivered':
+  //       return 'bg-green-100 text-green-800';
+  //     default:
+  //       return '';
+  //   }
+  // };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">My Orders</h1>
+    <div className="orders-container">
+      <div className="content-wrapper">
+        <h1 className="page-title">My Orders</h1>
         
-        <div className="space-y-4">
+        <div className="orders-list">
           {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {/* Order Header - עדכון גדלים */}
+            <div key={order.id} className="order-card">
               <div 
-                className="p-6 cursor-pointer hover:bg-gray-50"
+                className="order-header"
                 onClick={() => toggleOrder(order.id)}
               >
-                <div className="flex flex-col gap-4">
-                  {/* מספר הזמנה ותאריך */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg font-semibold text-gray-900">{order.id}</span>
-                      <span className="text-base text-gray-500">{order.date}</span>
+                <div className="order-header-content">
+                  <div className="order-basic-info">
+                    <div className="order-id-date">
+                      <span className="order-id">{order.id}</span>
+                      <span className="order-date">{order.date}</span>
                     </div>
-                    {/* חץ למעלה/למטה */}
-                    <div className="hidden sm:block">
+                    <div className="desktop-toggle">
                       {expandedOrders[order.id] ? 
-                        <ChevronUp className="w-6 h-6 text-gray-500" /> : 
-                        <ChevronDown className="w-6 h-6 text-gray-500" />
+                        <ChevronUp className="toggle-icon" /> : 
+                        <ChevronDown className="toggle-icon" />
                       }
                     </div>
                   </div>
 
-                  {/* סטטוס ומחיר */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className={`flex items-center px-4 py-2 rounded-full text-base font-medium ${getStatusStyle(order.status)}`}>
+                  <div className="status-price-section">
+                    <div className={`status-badge status-${order.status.toLowerCase()}`}>
                       {getStatusIcon(order.status)}
-                      <span className="ml-2">{order.status}</span>
+                      <span>{order.status}</span>
                     </div>
-                    <div className="flex items-center justify-between w-full sm:w-auto">
-                      <span className="text-lg font-bold text-gray-900">
-                        ${order.total.toFixed(2)}
-                      </span>
-                      <div className="sm:hidden">
+                    <div className="order-total">
+                      <span>${order.total.toFixed(2)}</span>
+                      <div className="mobile-toggle">
                         {expandedOrders[order.id] ? 
-                          <ChevronUp className="w-6 h-6 text-gray-500" /> : 
-                          <ChevronDown className="w-6 h-6 text-gray-500" />
+                          <ChevronUp className="toggle-icon" /> : 
+                          <ChevronDown className="toggle-icon" />
                         }
                       </div>
                     </div>
@@ -126,44 +121,37 @@ const Orders = () => {
                 </div>
               </div>
 
-              {/* Order Details */}
               {expandedOrders[order.id] && (
-                <div className="border-t border-gray-200">
-                  {/* Items List */}
-                  <div className="px-6 py-4">
-                    <div className="space-y-4">
-                      {order.items.map((item, index) => (
-                        <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                          <div className="flex-1">
-                            <h4 className="text-base font-medium text-gray-900">{item.name}</h4>
-                            <p className="text-base text-gray-500 mt-1">Qty: {item.quantity}</p>
-                          </div>
-                          <div className="mt-2 sm:mt-0 text-base font-medium text-gray-900">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </div>
+                <div className="order-details">
+                  <div className="items-list">
+                    {order.items.map((item, index) => (
+                      <div key={index} className="item">
+                        <div className="item-info">
+                          <h4 className="item-name">{item.name}</h4>
+                          <p className="item-quantity">Qty: {item.quantity}</p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Order Footer */}
-                  <div className="bg-gray-50 px-6 py-4">
-                    <div className="space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-gray-500">Tracking Number:</span>
-                          <span className="text-base font-medium text-blue-600">{order.tracking}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-base text-gray-500">Shipping Method:</span>
-                          <span className="text-base font-medium text-green-600">{order.shippingMethod}</span>
+                        <div className="item-price">
+                          ${(item.price * item.quantity).toFixed(2)}
                         </div>
                       </div>
-                      <div className="pt-3 border-t border-gray-200">
-                        <div className="flex justify-between items-center">
-                          <span className="text-lg font-medium">Total Amount</span>
-                          <span className="text-xl font-bold">${order.total.toFixed(2)}</span>
-                        </div>
+                    ))}
+                  </div>
+
+                  <div className="order-footer">
+                    <div className="shipping-info">
+                      <div className="info-group">
+                        <span className="info-label">Tracking Number:</span>
+                        <span className="tracking-number">{order.tracking}</span>
+                      </div>
+                      <div className="info-group">
+                        <span className="info-label">Shipping Method:</span>
+                        <span className="shipping-method">{order.shippingMethod}</span>
+                      </div>
+                    </div>
+                    <div className="total-section">
+                      <div className="total-row">
+                        <span className="total-label">Total Amount</span>
+                        <span className="total-amount">${order.total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -178,3 +166,5 @@ const Orders = () => {
 };
 
 export default Orders;
+
+
