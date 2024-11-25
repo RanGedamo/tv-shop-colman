@@ -1,3 +1,4 @@
+// src/contexts/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
 import PropTypes from 'prop-types';
@@ -8,69 +9,50 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const checkAuthStatus = async () => {
-    try {
-      // First try using existing access token
-      try {
-        const response = await authService.getCurrentUser();
-        setUser(response.user);
-        setLoading(false);
-        return;
-      } catch (accessError) {
-        // If 401 error, proceed to refresh check
-        if (accessError.response?.status !== 401) {
-          throw accessError;
-        }
-      }
-
-      // Try refreshing token if available
-      const hasRefreshToken = document.cookie.includes('refreshToken');
-      if (hasRefreshToken) {
-        const refreshResponse = await authService.refresh();
-        setUser(refreshResponse.user);
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    checkAuthStatus();
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const userData = await authService.getCurrentUser();
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('token');
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
   }, []);
 
   const register = async (userData) => {
-    try {
-      const response = await authService.register(userData);
+    const response = await authService.register(userData);
+    if (response.accessToken) {
+      localStorage.setItem('token', response.accessToken);
       setUser(response.user);
-      return response;
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error; // Re-throw to handle in the component
     }
+    return response;
   };
 
   const login = async (email, password) => {
-    try {
-      const response = await authService.login(email, password);
+    const response = await authService.login(email, password);
+    if (response.accessToken) {
+      localStorage.setItem('token', response.accessToken);
       setUser(response.user);
-      return response;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error; // Re-throw to handle in the component
     }
+    return response;
   };
+
 
   const logout = async () => {
     try {
       await authService.logout();
-    } catch (error) {
-      console.error('Logout error:', error);
     } finally {
+      localStorage.removeItem('token');
+
       setUser(null);
     }
   };
@@ -85,9 +67,12 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.isAdmin || false
   };
 
+  if (loading) {
+    return <div>טוען...</div>;
+  }
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
@@ -99,20 +84,17 @@ export const useAuth = () => {
   }
   return context;
 };
-
-// Safe context value usage
+// שימוש בטוח בערכי הקונטקסט
 export const useAuthStatus = () => {
   const { loading, isAuthenticated, isAdmin } = useAuth();
   return { loading, isAuthenticated, isAdmin };
 };
 
 export const useAuthActions = () => {
-  const { login, logout, register } = useAuth();
-  return { login, logout, register };
+  const { login, register, logout, updateUser } = useAuth();
+  return { login, register, logout, updateUser };
 };
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired
 };
-
-export default AuthProvider;

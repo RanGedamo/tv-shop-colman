@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Contexts/AuthContext';
 import "./Login.css";
@@ -6,28 +6,16 @@ import "./Login.css";
 
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { login, user, logout } = useAuth();
+  // const navigate = useNavigate();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
+const navigate = useNavigate();
   // בדיקה אם המשתמש כבר מחובר
-  useEffect(() => {
-    if (user) {
-      const confirmLogout = window.confirm(
-        'הינך כבר מחובר למערכת. האם ברצונך להתנתק?'
-      );
-      if (confirmLogout) {
-        logout();
-      } else {
-        navigate('/');
-      }
-    }
-  }, [user, navigate, logout]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +37,7 @@ const Login = () => {
     
     try {
       await login(formData.email, formData.password);
-      // navigate('/');
+      navigate('/');
     } catch (error) {
       // console.log(error);
       console.log(error.message);

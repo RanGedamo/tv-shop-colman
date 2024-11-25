@@ -1,11 +1,11 @@
 import React from "react";
+import "./Dashboard.css";
 import { Pie, Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend } from "chart.js";
-import "./Dashboard.css";
 
 // רישום הרכיבים הנדרשים ל-Chart.js
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend);
-
+ 
 function Dashboard() {
   // נתונים לגרף ה-Pie
   const pieData = {

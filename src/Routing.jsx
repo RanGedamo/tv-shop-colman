@@ -5,11 +5,11 @@ import { About, Cart, ContactUs, Dashboard, Home, Orders, PageNotFound, Products
 import Login from './components/Pages/Login/Login';
 import Register from './components/Pages/Register/Register';
 import { useAuth } from './Contexts/AuthContext';
-import PopUpCheck from './components/Pages/PopUpCheck/PopUpCheck';
+// import PopUpCheck from './components/Pages/PopUpCheck/PopUpCheck';
 
 
 function Routing() {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
 
   return (
@@ -17,6 +17,8 @@ function Routing() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Cart" element={<Cart />} />
         <Route path="/about" element={<About />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
@@ -29,7 +31,7 @@ function Routing() {
           path="/Orders" 
           element={isAuthenticated ? <Orders /> : <PopUpCheck />} 
         /> */}
-<Route 
+{/* <Route 
   path="/Cart" 
   element={
     isAuthenticated ? (
@@ -38,14 +40,14 @@ function Routing() {
       <PopUpCheck />
     )
   }
-/>
+/> */}
         <Route 
           path="/Profile" 
           element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} 
         />
 
         {/* Admin Route */}
-        <Route 
+        {/* <Route 
           path="/Dashboard" 
           element={
             isAuthenticated ? (
@@ -58,7 +60,7 @@ function Routing() {
               <Navigate to="/login" replace />
             )
           } 
-        />
+        /> */}
 
         <Route path="*" element={<PageNotFound />} />
       </Routes>

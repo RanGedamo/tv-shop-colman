@@ -11,6 +11,7 @@ function Header() {
   const { cart, removeFromCart } = useContext(CartContext);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -225,7 +226,8 @@ function Header() {
                           </Link>
                         </li>
                         <li>
-                          <button
+                          <Link
+                          to="/"
                             onClick={() => {
                               logout();
                               setIsUserDropdownOpen(false);
@@ -233,7 +235,7 @@ function Header() {
                             className="btn btn-link"
                           >
                             Logout
-                          </button>
+                          </Link>
                         </li>
                       </ul>
                     </div>
