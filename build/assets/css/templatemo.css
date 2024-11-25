@@ -31,22 +31,22 @@ Table of contents
 /* Typography */
 body, ul, li, p, a, label, input, div {
   font-family: 'Roboto', sans-serif;
-  font-size: 18px !important;
-  font-weight: 300 !important;
+  font-size: 18px ;
+  font-weight: 300 ;
 }
 .h1 {
   font-family: 'Roboto', sans-serif;
-  font-size: 48px !important;
-  font-weight: 200 !important;
+  font-size: 48px ;
+  font-weight: 200 ;
 }
 .h2 {
   font-family: 'Roboto', sans-serif;
-  font-size: 30px !important;
+  font-size: 30px ;
   font-weight: 300;
 }
 .h3 {
   font-family: 'Roboto', sans-serif;
-  font-size: 22px !important;
+  font-size: 22px ;
 }
 /* General */
 .logo { font-weight: 500 !important;}
@@ -179,8 +179,8 @@ body, ul, li, p, a, label, input, div {
 /* Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) {
   #templatemo_main_nav .navbar-nav {max-width: 550px;}
-  #template-mo-zay-hero-carousel .carousel-item {min-height: 30rem !important;}
-  .product-wap .h3, .product-wap li, .product-wap i, .product-wap p {font-size: 18px !important;}
+  #template-mo-zay-hero-carousel .carousel-item {min-height: 30rem ;}
+  .product-wap .h3, .product-wap li, .product-wap i, .product-wap p {font-size: 18px ;}
   .product-wap .product-color-dot {
     width: 12px;
     height: 12px;

@@ -1,0 +1,286 @@
+/* OrdersPage.css */
+.orders-container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
+  
+  .content-wrapper {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .content-wrapper {
+      padding: 2rem 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .content-wrapper {
+      padding: 2rem;
+    }
+  }
+  
+  .page-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 2rem;
+  }
+  
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .order-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .order-header {
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .order-header:hover {
+    background-color: #f9fafb;
+  }
+  
+  .order-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .order-basic-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  @media (min-width: 640px) {
+    .order-basic-info {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  
+  .order-id-date {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .order-id {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .order-date {
+    font-size: 1rem;
+    color: #6b7280;
+  }
+  
+  .status-price-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  @media (min-width: 640px) {
+    .status-price-section {
+      flex-direction: row;
+      align-items: center;
+      width: auto;
+    }
+  }
+  
+  .status-badge {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .status-badge svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+  }
+  
+  .status-shipped {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-processing {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-delivered {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  
+  .order-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+  }
+  
+  .toggle-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #6b7280;
+  }
+  
+  .order-details {
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .items-list {
+    padding: 1rem 1.5rem;
+  }
+  
+  .item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .item:last-child {
+    border-bottom: none;
+  }
+  
+  @media (min-width: 640px) {
+    .item {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  
+  .item-info {
+    flex: 1;
+  }
+  
+  .item-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+  }
+  
+  .item-quantity {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+  }
+  
+  .item-price {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+  }
+  
+  @media (min-width: 640px) {
+    .item-price {
+      margin-top: 0;
+    }
+  }
+  
+  .order-footer {
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+  }
+  
+  .shipping-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  @media (min-width: 640px) {
+    .shipping-info {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  .info-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .info-label {
+    font-size: 1rem;
+    color: #6b7280;
+  }
+  
+  .tracking-number {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2563eb;
+  }
+  
+  .shipping-method {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #059669;
+  }
+  
+  .total-section {
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 1rem;
+  }
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .total-label {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  
+  .total-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  
+  /* Hide toggle icon on mobile */
+  @media (max-width: 639px) {
+    .desktop-toggle {
+      display: none;
+    }
+  }
+  
+  /* Hide toggle icon on desktop */
+  @media (min-width: 640px) {
+    .mobile-toggle {
+      display: none;
+    }
+  }

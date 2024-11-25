@@ -1,21 +1,28 @@
-import "./Header.css";
+// src/components/Features/Header/Header.jsx
 import React, { useContext, useState } from "react";
-import { CartContext } from "../../../Services/CartContext";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../../Contexts/AuthContext";
+import "./Header.css";
+import { CartContext } from "../../../Contexts/CartContext";
 
 function Header() {
-  const { cart, removeFromCart } = useContext(CartContext); // גישה לעגלה והסרת פריטים
-  const [isCartOpen, setIsCartOpen] = useState(false); // שליטה על פתיחת ה-dropdown
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // שליטה על פתיחת ה-dropdown של היוזר
+  const { user, logout } = useAuth();
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const { cart, removeFromCart } = useContext(CartContext);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // חישוב הסכום הכולל
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  // חישוב כמות הפריטים הכוללת
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  // console.log("Current user:", user);
 
   return (
     <div className="header">
-      {/* ניווט עליון */}
+      {/* Top Nav */}
       <nav
         className="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block"
         id="templatemo_nav_top"
@@ -76,15 +83,15 @@ function Header() {
         </div>
       </nav>
 
-      {/* ניווט ראשי */}
+      {/* Main Nav */}
       <nav className="navbar navbar-expand-lg navbar-light shadow">
         <div className="container d-flex justify-content-between align-items-center">
-          <a
+          <Link
             className="navbar-brand text-success logo h1 align-self-center"
-            href="/"
+            to="/"
           >
             Zay
-          </a>
+          </Link>
 
           <button
             className="navbar-toggler border-0"
@@ -105,33 +112,37 @@ function Header() {
             <div className="flex-fill">
               <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                 <li className="nav-item">
-                  <a className="nav-link" href="/">
+                  <Link className="nav-link" to="/">
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="/About">
+                  <Link className="nav-link" to="/about">
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="/Products">
+                  <Link className="nav-link" to="/products">
                     Products
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="/ContactUs">
+                  <Link className="nav-link" to="/contactus">
                     ContactUs
-                  </a>
+                  </Link>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="/Dashboard">
-                    Dashboard
-                  </a>
-                </li>
+                {user?.isAdmin && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
+                      Dashboard
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
+
             <div className="navbar align-self-center d-flex">
+              {/* Cart Icon */}
               {/* אייקון העגלה */}
               <div className="cart-icon position-relative">
                 <button
@@ -156,7 +167,9 @@ function Header() {
                           />
                           <div className="cart-item-details">
                             <p>{item.name}</p>
-                            <p>${item.price} x {item.quantity}</p>
+                            <p>
+                              ${item.price} x {item.quantity}
+                            </p>
                           </div>
                           <button
                             className="remove-item-btn"
@@ -172,40 +185,67 @@ function Header() {
                     </div>
                     {cart.length > 0 && (
                       <div className="checkout-btn-container">
-                        <a href="/Cart" className="btn btn-primary">
+                        <Link to="/Cart" className="btn btn-primary">
                           Checkout
-                        </a>
+                        </Link>
                       </div>
                     )}
                   </div>
                 )}
               </div>
 
-              {/* אייקון היוזר */}
-              <div className="user-icon position-relative">
-                <button
-                  className="nav-icon position-relative text-decoration-none btn btn-link"
-                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                  aria-label="Toggle User Menu"
-                >
-                  <i className="fa fa-fw fa-user text-dark mr-3"></i>
-                </button>
-                {isUserDropdownOpen && (
-                  <div className="user-dropdown">
-                    <ul className="user-options">
-                      <li>
-                        <a href="/profile">Profile</a>
-                      </li>
-                      <li>
-                        <a href="/orders">Orders</a>
-                      </li>
-                      <li>
-                        <a href="/logout">Logout</a>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
+              {/* User Menu */}
+              {user ? (
+                <div className="user-icon position-relative">
+                  <button
+                    className="nav-icon position-relative text-decoration-none btn btn-link"
+                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                    aria-label="Toggle User Menu"
+                  >
+                    <i className="fa fa-fw fa-user text-dark mr-3"></i>
+                    {/* הצגת שם המשתמש אם קיים */}
+                    <span className="ms-1">{user.firstName}</span>
+                  </button>
+                  {isUserDropdownOpen && (
+                    <div className="user-dropdown">
+                      <ul className="user-options">
+                        <li>
+                          <Link
+                            to="/profile"
+                            onClick={() => setIsUserDropdownOpen(false)}
+                          >
+                            Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/orders"
+                            onClick={() => setIsUserDropdownOpen(false)}
+                          >
+                            Orders
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                          to="/"
+                            onClick={() => {
+                              logout();
+                              setIsUserDropdownOpen(false);
+                            }}
+                            className="btn btn-link"
+                          >
+                            Logout
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to="/login" className="btn btn-outline-primary">
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

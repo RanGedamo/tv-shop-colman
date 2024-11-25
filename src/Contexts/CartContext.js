@@ -8,6 +8,7 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
+  // טעינה ראשונית של ה-`cart` מ-`localStorage`
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     const updatedCart = storedCart.map((item) => ({
@@ -17,10 +18,14 @@ export const CartProvider = ({ children }) => {
     setCart(updatedCart);
   }, []);
 
+  // שמירה אוטומטית ב-`localStorage` כאשר ה-`cart` משתנה
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
   }, [cart]);
 
+  // הוספה לעגלה
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
@@ -36,6 +41,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // הסרה מעגלה
   const removeFromCart = (id) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === id);
@@ -54,8 +60,10 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // ניקוי עגלה - מתבצע רק כאשר המשתמש מבצע רכישה מוצלחת
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem("cart"); // ניקוי גם ב-`localStorage`
   };
 
   return (

@@ -1,11 +1,11 @@
 import React from "react";
+import "./Dashboard.css";
 import { Pie, Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend } from "chart.js";
-import "./Dashboard.css";
 
 // רישום הרכיבים הנדרשים ל-Chart.js
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend);
-
+ 
 function Dashboard() {
   // נתונים לגרף ה-Pie
   const pieData = {
@@ -28,21 +28,21 @@ function Dashboard() {
         data: [100, 200, 300, 400, 500, 600, 700, 800],
         borderColor: "#36A2EB",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
-        fill: true,
+        Filler: true,
       },
       {
         label: "Click",
         data: [50, 150, 250, 350, 450, 550, 650, 750],
         borderColor: "#FF6384",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
-        fill: true,
+        Filler: true,
       },
       {
         label: "Click Second Time",
         data: [30, 100, 200, 300, 400, 500, 600, 700],
         borderColor: "#FFCE56",
         backgroundColor: "rgba(255, 206, 86, 0.2)",
-        fill: true,
+        Filler: true,
       },
     ],
   };

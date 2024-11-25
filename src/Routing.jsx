@@ -1,22 +1,71 @@
+// src/Routing.jsx
 import React from 'react';
-import { Route, Routes } from "react-router-dom";
-import { About, Cart, ContactUs, Dashboard, Home, PageNotFound, Products } from "./components";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { About, Cart, ContactUs, Dashboard, Home, Orders, PageNotFound, Products,Profile } from "./components";
+import Login from './components/Pages/Login/Login';
+import Register from './components/Pages/Register/Register';
+import { useAuth } from './Contexts/AuthContext';
+// import PopUpCheck from './components/Pages/PopUpCheck/PopUpCheck';
 
 
+function Routing() {
+  const { isAuthenticated } = useAuth();
 
- function Routing() {
+
   return (
     <div className="main">
       <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/products" element={<Products />} />
-        <Route exact path="/about" element={<About/>} />
-        <Route exact path="/ContactUs" element={<ContactUs/>} />
-        <Route exact path="/Dashboard" element={<Dashboard/>} />
-        <Route exact path="/Cart" element={<Cart/>} />
-        <Route element={<PageNotFound/>} />
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Cart" element={<Cart />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+        <Route path="/Products" element={<Products />} />
+        <Route path="/Orders" element={<Orders />} />
+
+        {/* Protected Routes */}
+        {/* <Route 
+          path="/Orders" 
+          element={isAuthenticated ? <Orders /> : <PopUpCheck />} 
+        /> */}
+{/* <Route 
+  path="/Cart" 
+  element={
+    isAuthenticated ? (
+      <Cart />
+    ) : (
+      <PopUpCheck />
+    )
+  }
+/> */}
+        <Route 
+          path="/Profile" 
+          element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} 
+        />
+
+        {/* Admin Route */}
+        {/* <Route 
+          path="/Dashboard" 
+          element={
+            isAuthenticated ? (
+              user?.isAdmin ? (
+                <Dashboard />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        /> */}
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );
 }
+
 export default Routing;

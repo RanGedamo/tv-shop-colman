@@ -1,25 +1,32 @@
+// .eslintrc.js
 module.exports = {
-    env: {
-      browser: true,
-      es2021: true,
-      jest: true, // תמיכה ב-Jest
+  env: {
+    browser: true,
+    es2021: true,
+    jest: true,
+  },
+  plugins: ['react', 'jest'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:jest/recommended',
+  ],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
     },
-    plugins: ['react', 'jest'], // הוסף את התוסף של Jest
-    extends: [
-      'eslint:recommended',
-      'plugin:react/recommended',
-      'plugin:jest/recommended', // הרחבה מומלצת ל-Jest
-    ],
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-      ecmaVersion: 12,
-      sourceType: 'module',
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  rules: {
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    'no-unused-vars': 'warn',
+    'react/display-name': 'off', // מתעלם מאזהרות על קומפוננטות שמקבלות props
+  },
+  settings: {
+    react: {
+      version: 'detect',
     },
-    rules: {
-      'react/react-in-jsx-scope': 'off', // React 17+ לא דורש import
-      'no-unused-vars': 'warn', // התראה על משתנים שלא בשימוש
-    },
-  };
-  
+  },
+};

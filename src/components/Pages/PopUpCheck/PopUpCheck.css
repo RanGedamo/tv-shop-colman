@@ -1,0 +1,167 @@
+/* PopUpCheck.css */
+.page-content.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.popup-overlay.visible {
+  opacity: 1;
+}
+
+.popup-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.popup-container {
+  position: relative;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 28rem;
+  width: calc(100% - 2rem);
+  margin: 0 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: scale(0.95) translateY(1rem);
+  transition: all 0.3s;
+}
+
+.popup-container.visible {
+  transform: scale(1) translateY(0);
+}
+
+.decorative-circle {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.decorative-circle.top {
+  width: 8rem;
+  height: 8rem;
+  top: 0;
+  right: 0;
+  transform: translate(4rem, -4rem);
+}
+
+.decorative-circle.bottom {
+  width: 6rem;
+  height: 6rem;
+  bottom: 0;
+  left: 0;
+  transform: translate(-3rem, 3rem);
+}
+
+.popup-content {
+  position: relative;
+  text-align: right;
+}
+
+.popup-icon {
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  color: rgb(37, 99, 235);
+}
+
+.popup-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(17, 24, 39);
+  margin-bottom: 1rem;
+}
+
+.popup-text {
+  font-size: 1.125rem;
+  color: rgb(75, 85, 99);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.popup-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.button.primary {
+  background-color: rgb(37, 99, 235);
+  color: white;
+  border: none;
+}
+
+.button.primary:hover {
+  background-color: rgb(29, 78, 216);
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.button.secondary {
+  background-color: transparent;
+  border: 2px solid rgb(209, 213, 219);
+  color: rgb(55, 65, 81);
+}
+
+.button.secondary:hover {
+  border-color: rgb(156, 163, 175);
+  background-color: rgb(249, 250, 251);
+  transform: scale(1.05);
+}
+
+/* אנימציות */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(1rem);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
