@@ -18,7 +18,7 @@ function Header() {
     0
   );
 
-  console.log("Current user:", user);
+  // console.log("Current user:", user);
 
   return (
     <div className="header">
