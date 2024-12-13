@@ -1,7 +1,7 @@
 // src/Routing.jsx
 import React from 'react';
 import { Route, Routes, Navigate } from "react-router-dom";
-import { About, Cart, ContactUs, Dashboard, Home, Orders, PageNotFound, Products,Profile } from "./components";
+import { About, AccountSettings, Checkout, ContactUs, Dashboard, Home, Orders, PageNotFound, Products,Profile, Wishlist } from "./components";
 import Login from './components/Pages/Login/Login';
 import Register from './components/Pages/Register/Register';
 import { useAuth } from './Contexts/AuthContext';
@@ -9,7 +9,8 @@ import { useAuth } from './Contexts/AuthContext';
 
 
 function Routing() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated ,user} = useAuth();
+console.log("user :", user);
 
 
   return (
@@ -18,13 +19,14 @@ function Routing() {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Cart" element={<Cart />} />
+        <Route path="/Checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Products" element={<Products />} />
-        <Route path="/Orders" element={<Orders />} />
+        <Route path="/account/orders" element={<Orders />} />
+        <Route path="/account/favorites" element={<Wishlist />} />
 
         {/* Protected Routes */}
         {/* <Route 
@@ -42,8 +44,8 @@ function Routing() {
   }
 /> */}
         <Route 
-          path="/Profile" 
-          element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} 
+          path="/account/settings" 
+          element={isAuthenticated ? <AccountSettings /> : <Navigate to="/login" />} 
         />
 
         {/* Admin Route */}

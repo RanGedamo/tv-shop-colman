@@ -24,6 +24,9 @@ module.exports = {
     'no-unused-vars': 'warn',
     'react/display-name': 'off', // מתעלם מאזהרות על קומפוננטות שמקבלות props
   },
+  globals: {
+    google: 'readonly', // הגדרה שהמשתנה google הוא גלובלי וקריא בלבד
+  },
   settings: {
     react: {
       version: 'detect',

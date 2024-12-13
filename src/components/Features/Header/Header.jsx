@@ -1,257 +1,305 @@
-// src/components/Features/Header/Header.jsx
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+// src/components/Header.js
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ShoppingCart,
+  Heart,
+  Search,
+  Menu,
+  User,
+  X,
+  LogIn,
+  ChevronDown,
+} from "lucide-react";
+import { useCart } from "./hooks/useCart";
+import CartDropdown from "../../Pages/Checkout/CartDropdown";
 import { useAuth } from "../../../Contexts/AuthContext";
-import "./Header.css";
-import { CartContext } from "../../../Contexts/CartContext";
+import LogOutSuccessPopup from "../../PopUps/LogOutSuccessPopup";
 
-function Header() {
-  const { user, logout } = useAuth();
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const { cart, removeFromCart } = useContext(CartContext);
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+  const { cartCount } = useCart();
+  const { user, logout } = useAuth();
 
+  const [logOutSuccess, setLogOutSuccess] = useState(false);
+  // console.log("user :", user);
+  console.log("user :", logOutSuccess);
 
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-
-  // console.log("Current user:", user);
+  const handleLogout = async () => {
+    try {
+     await logout(user.user);
+     setUserName(user.user.firstName);
+     setLogOutSuccess(true);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  
+  const menuItems = [
+    { label: "Account Settings", href: "/account/settings" },
+    { label: "Order History", href: "/account/orders" },
+    { label: "My Favorites", href: "/account/favorites" },
+    { label: "Logout", onClick: handleLogout },    
+  ];
 
   return (
-    <div className="header">
-      {/* Top Nav */}
-      <nav
-        className="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block"
-        id="templatemo_nav_top"
-      >
-        <div className="container text-light">
-          <div className="w-100 d-flex justify-content-between">
-            <div>
-              <i className="fa fa-envelope mx-2"></i>
-              <a
-                className="navbar-sm-brand text-light text-decoration-none"
-                href="mailto:info@company.com"
-              >
-                info@company.com
-              </a>
-              <i className="fa fa-phone mx-2"></i>
-              <a
-                className="navbar-sm-brand text-light text-decoration-none"
-                href="tel:010-020-0340"
-              >
-                010-020-0340
-              </a>
+    <header className="bg-white shadow-md">
+           {logOutSuccess && <LogOutSuccessPopup userName={userName} />}
+
+      {/* Top Bar */}
+      <div className="bg-gray-900 text-white py-2">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center text-sm">
+            <div className="flex items-center gap-4">
+              <span className="border-r border-gray-700 pr-4">
+                Customer Service: 1-800-555-555
+              </span>
+              <span>Free Shipping on Orders Over $5,000</span>
             </div>
-            <div>
-              <a
-                className="text-light"
-                href="https://fb.com/templatemo"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-facebook-f fa-sm fa-fw me-2"></i>
-              </a>
-              <a
-                className="text-light"
-                href="https://www.instagram.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-instagram fa-sm fa-fw me-2"></i>
-              </a>
-              <a
-                className="text-light"
-                href="https://twitter.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-twitter fa-sm fa-fw me-2"></i>
-              </a>
-              <a
-                className="text-light"
-                href="https://www.linkedin.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-linkedin fa-sm fa-fw"></i>
-              </a>
+            <div className="flex items-center gap-4">
+              <Link to="/track-order" className="hover:text-blue-400">
+                Track Order
+              </Link>
+              <Link to="/store-locator" className="hover:text-blue-400">
+                Stores
+              </Link>
             </div>
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Main Nav */}
-      <nav className="navbar navbar-expand-lg navbar-light shadow">
-        <div className="container d-flex justify-content-between align-items-center">
-          <Link
-            className="navbar-brand text-success logo h1 align-self-center"
-            to="/"
-          >
-            Zay
+      {/* Main Header */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link to="/" className="text-2xl font-bold text-blue-600">
+            TV Shop
           </Link>
 
-          <button
-            className="navbar-toggler border-0"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#templatemo_main_nav"
-            aria-controls="templatemo_main_nav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8">
+            <Link
+              to="/"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              Home
+            </Link>
+            <div className="relative group">
+              <Link
+                to="/products"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                TVs
+              </Link>
+              <div className="absolute hidden group-hover:block w-48 z-20 bg-white shadow-lg rounded-lg mt-2 py-2">
+                <Link
+                  to="/products/oled"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  OLED
+                </Link>
+                <Link
+                  to="/products/qled"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  QLED
+                </Link>
+                <Link
+                  to="/products/led"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  LED
+                </Link>
+              </div>
+            </div>
+            <Link
+              to="/deals"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              Deals
+            </Link>
+            <Link
+              to="/about"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              About
+            </Link>
+            <Link
+              to="/contactUs"
+              className="text-gray-700 hover:text-blue-600 font-medium"
+            >
+              contact
+            </Link>
+            {user?.user?.isAdmin && (
+              <Link
+                to="/dashboard"
+                className="text-gray-700 hover:text-blue-600 font-medium"
+              >
+                dashboard
+              </Link>
+            )}
+          </nav>
 
-          <div
-            className="align-self-center collapse navbar-collapse flex-fill d-lg-flex justify-content-lg-between"
-            id="templatemo_main_nav"
-          >
-            <div className="flex-fill">
-              <ul className="nav navbar-nav d-flex justify-content-between mx-lg-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/">
-                    Home
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/about">
-                    About
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/products">
-                    Products
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/contactus">
-                    ContactUs
-                  </Link>
-                </li>
-                {user?.isAdmin && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard">
-                      Dashboard
-                    </Link>
-                  </li>
+          {/* Icons */}
+          <div className="flex items-center gap-3 ">
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="text-gray-700 hover:text-blue-600"
+            >
+              <Search size={24} />
+            </button>
+            <Link
+              to="/account/favorites"
+              className="text-gray-700 hover:text-blue-600"
+            >
+              <Heart size={24} />
+            </Link>
+            <div className="relative">
+              <button
+                className="cart-trigger text-gray-700 hover:text-blue-600 relative"
+                onClick={() => setIsCartOpen(!isCartOpen)}
+              >
+                <ShoppingCart size={26} style={{ marginTop: "6px" }} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
                 )}
-              </ul>
+              </button>
+
+              <CartDropdown
+                isOpen={isCartOpen}
+                onClose={() => setIsCartOpen(false)}
+              />
             </div>
 
-            <div className="navbar align-self-center d-flex">
-              {/* Cart Icon */}
-              {/* אייקון העגלה */}
-              <div className="cart-icon position-relative">
+            {user && (
+              <div className="relative">
                 <button
-                  className="nav-icon position-relative text-decoration-none btn btn-link"
-                  onClick={() => setIsCartOpen(!isCartOpen)}
-                  aria-label="Toggle Cart"
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex  items-center text-gray-700 hover:text-blue-600  rounded-md"
                 >
-                  <i className="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                  <span className="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">
-                    {totalItems}
+                  <span className="pl-5 xs:pl-1 xs:hidden">
+                    Hello, {user?.user?.firstName}
                   </span>
+                  <div className="xs:pl-6 pl-2 xs:pt-4">
+                    <User size={24} />
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isOpen ? "transform rotate-180" : ""
+                    }`}
+                  />
                 </button>
-                {isCartOpen && (
-                  <div className="cart-dropdown">
-                    <ul className="cart-items">
-                      {cart.map((item) => (
-                        <li key={item.id} className="cart-item">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="cart-item-image"
-                          />
-                          <div className="cart-item-details">
-                            <p>{item.name}</p>
-                            <p>
-                              ${item.price} x {item.quantity}
-                            </p>
-                          </div>
-                          <button
-                            className="remove-item-btn"
-                            onClick={() => removeFromCart(item.id)}
-                          >
-                            Remove
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="cart-total">
-                      <p>Total: ${totalPrice.toFixed(2)}</p>
-                    </div>
-                    {cart.length > 0 && (
-                      <div className="checkout-btn-container">
-                        <Link to="/Cart" className="btn btn-primary">
-                          Checkout
+                <span className="pl-5 xs:pl-1 sm:hidden">
+                  Hello, {user?.user?.firstName}
+                </span>
+
+                {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                    {menuItems.map((item, index) =>
+                      item.onClick ? (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            item.onClick();
+                            setIsOpen(false);
+                          }}
+                          className="w-full text-right block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {item.label}
+                        </button>
+                      ) : (
+                        <Link
+                          key={index}
+                          to={item.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-right"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {item.label}
                         </Link>
-                      </div>
+                      )
                     )}
                   </div>
                 )}
               </div>
+            )}
+            {!user && (
+              <Link
+                to="/Login"
+                className="text-gray-700 hover:text-blue-600 flex"
+              >
+                <p className="lg:pl-2 xs:pl-2 xs:pr-1">
+                  <b>L</b>ogin
+                </p>
+                <LogIn size={24} />
+              </Link>
+            )}
 
-              {/* User Menu */}
-              {user ? (
-                <div className="user-icon position-relative">
-                  <button
-                    className="nav-icon position-relative text-decoration-none btn btn-link"
-                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    aria-label="Toggle User Menu"
-                  >
-                    <i className="fa fa-fw fa-user text-dark mr-3"></i>
-                    {/* הצגת שם המשתמש אם קיים */}
-                    <span className="ms-1">{user.firstName}</span>
-                  </button>
-                  {isUserDropdownOpen && (
-                    <div className="user-dropdown">
-                      <ul className="user-options">
-                        <li>
-                          <Link
-                            to="/profile"
-                            onClick={() => setIsUserDropdownOpen(false)}
-                          >
-                            Profile
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/orders"
-                            onClick={() => setIsUserDropdownOpen(false)}
-                          >
-                            Orders
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                          to="/"
-                            onClick={() => {
-                              logout();
-                              setIsUserDropdownOpen(false);
-                            }}
-                            className="btn btn-link"
-                          >
-                            Logout
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link to="/login" className="btn btn-outline-primary">
-                  Login
-                </Link>
-              )}
-            </div>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden text-gray-700 hover:text-blue-600"
+            >
+              <Menu size={24} />
+            </button>
           </div>
         </div>
-      </nav>
-    </div>
+
+        {/* Search Bar */}
+        {isSearchOpen && (
+          <div className="mt-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-600"
+              />
+              <X
+                size={20}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+                onClick={() => setIsSearchOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white border-t">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex flex-col space-y-4">
+              <Link to="/" className="text-gray-700 hover:text-blue-600">
+                Home
+              </Link>
+              <Link
+                to="/products"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                TVs
+              </Link>
+              <Link to="/deals" className="text-gray-700 hover:text-blue-600">
+                Deals
+              </Link>
+              <Link to="/about" className="text-gray-700 hover:text-blue-600">
+                About
+              </Link>
+              <Link
+                to="/contactUs"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                contact
+              </Link>
+            </nav>
+          </div>
+        </div>
+      )}
+    </header>
   );
-}
+};
 
 export default Header;

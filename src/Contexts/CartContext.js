@@ -1,79 +1,100 @@
-import React, { createContext, useState, useEffect } from "react";
+// CartContext.js
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import PropTypes from "prop-types";
-
-// יצירת ה-Context
 export const CartContext = createContext();
 
-// ספק ה-Context
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0);
 
-  // טעינה ראשונית של ה-`cart` מ-`localStorage`
+  // Load initial cart data
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedCart = storedCart.map((item) => ({
-      ...item,
-      quantity: item.quantity ? item.quantity : 1,
-    }));
-    setCart(updatedCart);
+    const loadCart = () => {
+      const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      setCartItems(savedCart);
+      updateCartStats(savedCart);
+    };
+    loadCart();
   }, []);
 
-  // שמירה אוטומטית ב-`localStorage` כאשר ה-`cart` משתנה
-  useEffect(() => {
-    if (cart.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-  }, [cart]);
+  // Update cart statistics
+  const updateCartStats = useCallback((items) => {
+    const count = items.reduce((sum, item) => sum + item.quantity, 0);
+    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    setCartCount(count);
+    setCartTotal(total);
+  }, []);
 
-  // הוספה לעגלה
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.id === product.id);
-      if (existingProduct) {
-        return prevCart.map((item) =>
+  // Add to cart
+  const addToCart = useCallback((product) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === product.id);
+      let newItems;
+      
+      if (existingItem) {
+        newItems = prevItems.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        newItems = [...prevItems, { ...product, quantity: 1 }];
       }
+      
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      updateCartStats(newItems);
+      return newItems;
     });
-  };
+  }, [updateCartStats]);
 
-  // הסרה מעגלה
-  const removeFromCart = (id) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.id === id);
-      if (existingProduct) {
-        if (existingProduct.quantity > 1) {
-          return prevCart.map((item) =>
-            item.id === id
-              ? { ...item, quantity: item.quantity - 1 }
-              : item
-          );
-        } else {
-          return prevCart.filter((item) => item.id !== id);
-        }
-      }
-      return prevCart;
+  // Remove from cart
+  const removeFromCart = useCallback((productId) => {
+    setCartItems(prevItems => {
+      const newItems = prevItems.filter(item => item.id !== productId);
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      updateCartStats(newItems);
+      return newItems;
     });
-  };
+  }, [updateCartStats]);
 
-  // ניקוי עגלה - מתבצע רק כאשר המשתמש מבצע רכישה מוצלחת
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem("cart"); // ניקוי גם ב-`localStorage`
-  };
+  // Update quantity
+  const updateQuantity = useCallback((productId, newQuantity) => {
+    setCartItems(prevItems => {
+      const newItems = prevItems.map(item =>
+        item.id === productId
+          ? { ...item, quantity: Math.max(0, newQuantity) }
+          : item
+      ).filter(item => item.quantity > 0);
+      
+      localStorage.setItem('cart', JSON.stringify(newItems));
+      updateCartStats(newItems);
+      return newItems;
+    });
+  }, [updateCartStats]);
+
+  // Clear cart
+  const clearCart = useCallback(() => {
+    setCartItems([]);
+    localStorage.removeItem('cart');
+    updateCartStats([]);
+  }, [updateCartStats]);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{
+      cartItems,
+      cartCount,
+      cartTotal,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart
+    }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// הגדרת PropTypes
 CartProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

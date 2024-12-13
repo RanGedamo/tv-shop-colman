@@ -47,13 +47,14 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-  const logout = async () => {
+  const logout = async (user) => {
     try {
-      await authService.logout();
+      await authService.logout(user);
     } finally {
-      localStorage.removeItem('token');
-
-      setUser(null);
+setTimeout(() => {
+  localStorage.removeItem('token');
+  setUser(null);
+}, 3000);
     }
   };
 
